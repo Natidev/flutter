@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/courses")
 public class Api {
     CoursesRepository repo;
 
@@ -35,7 +36,7 @@ public class Api {
     ){
         return repo.saveAll(cs);
     }
-    @GetMapping("/courses/all")
+    @GetMapping("/all")
     public Page<Course> getCourses(
             @PageableDefault(size = 5) Pageable pageable
     ) {
@@ -43,7 +44,17 @@ public class Api {
 //        pageable= PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort);
         return repo.findAll(pageable);
     }
-
-
-
+    @GetMapping("/prerequisite")
+    public List<Course> getPrerequisites(
+            @RequestParam String _id
+    ){
+        var course=repo.findCourseBy_id(_id);
+        return course.getPrerequisite().stream().map(i-> repo.findCourseBy_id(i)).toList();
+    }
+@GetMapping("/available")
+public List<Course> getAvailableCourses(
+        @RequestBody PrerequisiteData data
+){
+        return repo.findCourseBySemesterAndYearGreaterThanAndPrerequisiteNotContains(data.semester(), data.year(), data.notTaken());
+}
 }
