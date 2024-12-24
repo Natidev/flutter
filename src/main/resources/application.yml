@@ -1,0 +1,7 @@
+spring:
+    application:
+        name: '"flutter"'
+    data:
+      mongodb:
+        uri: mongodb://localhost:27017
+        database: Flutter
