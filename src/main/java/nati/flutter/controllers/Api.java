@@ -20,7 +20,10 @@ public class Api {
     public Api(CoursesRepository repo) {
         this.repo = repo;
     }
-
+    @GetMapping
+    public List<Course> all(){
+        return repo.findAll();
+    }
     @PostMapping("/add")
     @ResponseBody
     public Course addAcourse(
@@ -51,10 +54,22 @@ public class Api {
         var course=repo.findCourseBy_id(_id);
         return course.getPrerequisite().stream().map(i-> repo.findCourseBy_id(i)).toList();
     }
-@GetMapping("/available")
+@PostMapping("/available")
 public List<Course> getAvailableCourses(
         @RequestBody PrerequisiteData data
 ){
         return repo.findCourseBySemesterAndYearGreaterThanAndPrerequisiteNotContains(data.semester(), data.year(), data.notTaken());
+}
+    @PostMapping("/notavailable")
+    public List<Course> getNotAvailableCourses(
+            @RequestBody PrerequisiteData data
+    ){
+        return repo.findCourseBySemesterAndYearGreaterThanEqualAndPrerequisiteContains(data.semester(), data.year(), data.notTaken());
+    }
+@GetMapping("/{id}")
+    public  Course getCourse(
+            @PathVariable String id
+){
+        return repo.findCourseBy_id(id);
 }
 }
