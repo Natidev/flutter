@@ -3,7 +3,6 @@ package nati.flutter.repos;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CoursesRepository extends MongoRepository<Course, String> {
     Course findCourseBy_id(String _id);
